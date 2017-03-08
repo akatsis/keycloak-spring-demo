@@ -13,3 +13,10 @@ product:
 spring:
   freemarker:
     cache: false
+
+management:
+  security:
+    enabled: false
+logging:
+  level:
+    org.springframework.security.web: debug

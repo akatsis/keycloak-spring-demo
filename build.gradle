@@ -12,8 +12,8 @@ ext {
     keycloakVersion = '1.2.1.Smartling-SNAPSHOT'
     keycloakExtrasVersion = '0.3.0-RELEASE'
     resteasyVersion = '3.0.10.Final'
-    springVersion = '4.1.6.RELEASE'
-    springBootVersion = '1.2.3.RELEASE'
+    springVersion = '4.3.7.RELEASE'
+    springBootVersion = '1.5.2.RELEASE'
     springSecurityVersion = '3.2.7.RELEASE'
 }
 
@@ -38,6 +38,12 @@ subprojects {
         compile "org.springframework.security:spring-security-config:${springSecurityVersion}"
         compile "org.keycloak:keycloak-spring-security-adapter:${keycloakVersion}"
         compile "net.rossillo.mvc.cache:spring-mvc-cache-control:1.1.1-RELEASE"
+        // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-actuator
+        compile group: 'org.springframework.boot', name: 'spring-boot-starter-actuator', version: "${springBootVersion}"
+        // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-hateoas
+        compile group: 'org.springframework.boot', name: 'spring-boot-starter-hateoas', version: "${springBootVersion}"
+
+
 
         testCompile "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
     }
