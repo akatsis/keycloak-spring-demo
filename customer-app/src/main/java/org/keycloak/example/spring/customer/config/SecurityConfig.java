@@ -28,7 +28,7 @@ import org.springframework.security.web.authentication.session.SessionAuthentica
  * @author Scott Rossillo
  */
 @Configuration
-@EnableWebSecurity
+@EnableWebSecurity(debug = true)
 @ComponentScan(basePackageClasses = KeycloakSecurityComponents.class)
 public class SecurityConfig extends KeycloakWebSecurityConfigurerAdapter
 {
