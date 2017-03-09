@@ -1,7 +1,7 @@
 package org.keycloak.example.spring.api;
 
-import net.rossillo.spring.web.mvc.CacheControl;
-import net.rossillo.spring.web.mvc.CachePolicy;
+//import net.rossillo.spring.web.mvc.CacheControl;
+//import net.rossillo.spring.web.mvc.CachePolicy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -17,7 +17,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/products")
-@CacheControl(policy = CachePolicy.NO_CACHE)
+//@CacheControl(policy = CachePolicy.NO_CACHE)
 public class ProductApiController {
 
     private static final Logger log = LoggerFactory.getLogger(ProductApiController.class);

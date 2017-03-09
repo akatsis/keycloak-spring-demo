@@ -21,6 +21,7 @@ subprojects {
     apply plugin: 'java'
     apply plugin: 'spring-boot'
     apply plugin: 'war'
+    apply plugin: 'maven'
 
     group = 'org.keycloak.springsecurity.demo'
     [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'

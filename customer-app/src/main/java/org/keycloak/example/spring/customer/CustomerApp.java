@@ -1,6 +1,6 @@
 package org.keycloak.example.spring.customer;
 
-import net.rossillo.spring.web.mvc.CacheControlHandlerInterceptor;
+//import net.rossillo.spring.web.mvc.CacheControlHandlerInterceptor;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -25,9 +25,9 @@ public class CustomerApp extends SpringBootServletInitializer {
         return application.sources(CustomerApp.class);
     }
 
-    @Bean
-    public CacheControlHandlerInterceptor cacheControlHandlerInterceptor() {
-        return new CacheControlHandlerInterceptor();
-    }
+//    @Bean
+//    public CacheControlHandlerInterceptor cacheControlHandlerInterceptor() {
+//        return new CacheControlHandlerInterceptor();
+//    }
 
 }

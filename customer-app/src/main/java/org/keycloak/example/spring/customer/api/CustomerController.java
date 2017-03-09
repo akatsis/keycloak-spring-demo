@@ -1,7 +1,7 @@
 package org.keycloak.example.spring.customer.api;
 
-import net.rossillo.spring.web.mvc.CacheControl;
-import net.rossillo.spring.web.mvc.CachePolicy;
+//import net.rossillo.spring.web.mvc.CacheControl;
+//import net.rossillo.spring.web.mvc.CachePolicy;
 import org.keycloak.example.spring.customer.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,7 +19,7 @@ import java.util.List;
  * Customer portal controller.
  */
 @Controller
-@CacheControl(policy = CachePolicy.NO_CACHE)
+//@CacheControl(policy = CachePolicy.NO_CACHE)
 public class CustomerController {
 
     @Autowired

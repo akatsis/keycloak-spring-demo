@@ -29,20 +29,17 @@ import org.springframework.security.web.authentication.session.SessionAuthentica
  */
 @Configuration
 @EnableWebSecurity(debug = true)
-@ComponentScan(basePackageClasses = KeycloakSecurityComponents.class)
-public class SecurityConfig extends KeycloakWebSecurityConfigurerAdapter
+@ComponentScan(basePackageClasses = KeycloakSecurityComponents.class)  //necessary for KeycloakClientRequestFactory to be found
+public class KeycloakSecurityConfig extends KeycloakWebSecurityConfigurerAdapter //this class causes failing due to keycloag.json missing..
 {
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         auth.authenticationProvider(keycloakAuthenticationProvider());
     }
 
-    @Autowired
-    public KeycloakClientRequestFactory keycloakClientRequestFactory;
-
     @Bean
     @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-    public KeycloakRestTemplate keycloakRestTemplate() {
+    public KeycloakRestTemplate keycloakRestTemplate(KeycloakClientRequestFactory keycloakClientRequestFactory) {
         return new KeycloakRestTemplate(keycloakClientRequestFactory);
     }
 
