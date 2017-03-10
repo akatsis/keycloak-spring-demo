@@ -16,6 +16,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 /**
  * Created by angelos on 8/3/2017.
  */
+@Deprecated
 //@Configuration
 //@EnableWebSecurity(debug = true)
 //@ComponentScan(basePackageClasses = KeycloakSecurityComponents.class) //necessary for KeycloakClientRequestFactory to be found

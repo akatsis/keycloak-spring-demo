@@ -2,16 +2,15 @@ package org.keycloak.example.spring.customer.api;
 
 //import net.rossillo.spring.web.mvc.CacheControl;
 //import net.rossillo.spring.web.mvc.CachePolicy;
+import org.keycloak.KeycloakPrincipal;
+import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken;
 import org.keycloak.example.spring.customer.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotNull;
 import java.security.Principal;
@@ -43,10 +42,17 @@ public class CustomerController {
         return "customers";
     }
 
-    @PreAuthorize("hasRole('ROLE_MYASS')")
-    @RequestMapping(value = "/principal", method = RequestMethod.GET)
-    public @ResponseBody Principal getPrincipal(Principal principal) {
-        return principal;
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @RequestMapping(value = "/prepost/principal", method = RequestMethod.GET)
+    @ResponseBody
+    public String getPrincipal(KeycloakAuthenticationToken token) {
+        return token.getAccount().getKeycloakSecurityContext().getTokenString();
+    }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PostMapping(value = "/prepost/createRealm")
+    public @ResponseBody String createRealm(@RequestBody String realmName) {
+        return customerService.createRealm(realmName);
     }
 
     @RequestMapping(value = "/admin", method = RequestMethod.GET)

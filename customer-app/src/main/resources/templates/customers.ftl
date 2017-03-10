@@ -11,9 +11,9 @@
     <a href="${productServiceUrl}">Products</a>
     |
     <form action="<@spring.url '/sso/logout' />" method="post">
-        <input type="hidden"
-               name="${_csrf.parameterName}"
-               value="${_csrf.token}"/>
+        <#--<input type="hidden"-->
+               <#--name="${_csrf.parameterName}"-->
+               <#--value="${_csrf.token}"/>-->
         <input type="submit" name="submit" value="Logout"/>
     </form>
 </header>

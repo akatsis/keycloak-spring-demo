@@ -11,4 +11,6 @@ public interface CustomerService {
      * Returns a list of customers.
      */
     List<String> getCustomers();
+
+    String createRealm(String realmName);
 }

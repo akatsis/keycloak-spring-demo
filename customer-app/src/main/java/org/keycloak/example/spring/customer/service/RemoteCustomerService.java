@@ -25,7 +25,13 @@ public class RemoteCustomerService implements CustomerService {
 
     @Override
     public List<String> getCustomers() {
-        ResponseEntity<String[]> response = template.getForEntity(endpoint, String[].class);
+        ResponseEntity<String[]> response = template.getForEntity(endpoint+"/customers", String[].class);
         return Arrays.asList(response.getBody());
+    }
+
+    @Override
+    public String createRealm(String realmName) {
+        ResponseEntity<String> response = template.postForEntity(endpoint+"/realms", realmName ,String.class);
+        return response.getBody();
     }
 }

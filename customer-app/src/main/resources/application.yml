@@ -4,7 +4,7 @@ server:
 
 database:
   service:
-    url: http://localhost:9091/database/customers
+    url: http://localhost:9091/database
 
 product:
   service:
