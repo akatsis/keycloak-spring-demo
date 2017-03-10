@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -29,11 +30,16 @@ public class KeycloakAdminApiController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping
     public ResponseEntity<List<RealmRepresentation>> createRealm(@RequestBody String name) {
-        RealmRepresentation realmRepresentation = new RealmRepresentation();
-        realmRepresentation.setDisplayName(name);
-        realmRepresentation.setEnabled(true);
-        realmRepresentation.setSslRequired("external");
-        keycloak.realms().create(realmRepresentation);
+        RealmRepresentation templateRealm = keycloak.realms().realm("spring-demo").toRepresentation();
+        templateRealm.setUsers(new ArrayList<>());
+        templateRealm.setClients(new ArrayList<>());
+        templateRealm.setId(name);
+        templateRealm.setRealm(name);
+        templateRealm.setDisplayName(name);
+        templateRealm.setEnabled(true);
+        templateRealm.setSslRequired("external");
+        templateRealm.setRegistrationAllowed(true);
+        keycloak.realms().create(templateRealm);
         return new ResponseEntity<>(keycloak.realms().findAll(), HttpStatus.CREATED);
     }
 
