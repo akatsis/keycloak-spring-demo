@@ -10,7 +10,7 @@ public interface CustomerService {
     /**
      * Returns a list of customers.
      */
-    List<String> getCustomers();
+    List<String> getCustomers(String realm);
 
-    String createRealm(String realmName);
+    String createGame(String gameName);
 }

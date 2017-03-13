@@ -1,0 +1,9 @@
+{
+  "realm": "game_01_realm",
+  "auth-server-url": "http://localhost:8095/auth",
+  "ssl-required": "external",
+  "resource": "mobile_game_app",
+  "credentials": {
+    "secret": "6f30d8a6-b979-4edc-b84e-5ae08aa92393"
+  }
+}

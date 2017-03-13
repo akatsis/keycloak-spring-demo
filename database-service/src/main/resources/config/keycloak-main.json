@@ -1,0 +1,7 @@
+{
+  "realm": "spring-demo",
+  "auth-server-url": "http://localhost:8095/auth",
+  "bearer-only": true,
+  "ssl-required": "external",
+  "resource": "database-service"
+}

@@ -16,22 +16,33 @@ import java.util.List;
 @Service
 public class RemoteCustomerService implements CustomerService {
 
-    @Autowired
-    private KeycloakRestTemplate template;
+    private final String DEFAULT_REALM = "spring-demo";
+    private final KeycloakRestTemplate template;
 
     @NotNull
     @Value("${database.service.url}")
     private String endpoint;
 
+
+
+    @Autowired
+    public RemoteCustomerService(KeycloakRestTemplate template) {
+        this.template = template;
+    }
+
     @Override
-    public List<String> getCustomers() {
-        ResponseEntity<String[]> response = template.getForEntity(endpoint+"/customers", String[].class);
+    public List<String> getCustomers(String realm) {
+        String endpoint= this.endpoint+"/customers";
+        if(!realm.equals(DEFAULT_REALM))
+            endpoint = this.endpoint+"/multi-tenant/"+realm+"/customers";
+
+        ResponseEntity<String[]> response = template.getForEntity(endpoint, String[].class);
         return Arrays.asList(response.getBody());
     }
 
     @Override
-    public String createRealm(String realmName) {
-        ResponseEntity<String> response = template.postForEntity(endpoint+"/realms", realmName ,String.class);
+    public String createGame(String gameName) {
+        ResponseEntity<String> response = template.postForEntity(endpoint+"/realms", gameName ,String.class);
         return response.getBody();
     }
 }

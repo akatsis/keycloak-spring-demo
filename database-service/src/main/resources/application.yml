@@ -10,4 +10,4 @@ logging:
 
 
 keycloak:
-  configurationFile: classpath:config/keycloak.json
+  configurationFile: classpath:config/keycloak-main.json

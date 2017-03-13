@@ -1,5 +1,7 @@
 package org.keycloak.example.spring.customer.config;
 
+import org.keycloak.adapters.KeycloakDeployment;
+import org.keycloak.adapters.KeycloakDeploymentBuilder;
 import org.keycloak.adapters.springsecurity.KeycloakSecurityComponents;
 import org.keycloak.adapters.springsecurity.client.KeycloakClientRequestFactory;
 import org.keycloak.adapters.springsecurity.client.KeycloakRestTemplate;
@@ -7,6 +9,7 @@ import org.keycloak.adapters.springsecurity.config.KeycloakWebSecurityConfigurer
 import org.keycloak.adapters.springsecurity.filter.KeycloakAuthenticationProcessingFilter;
 import org.keycloak.adapters.springsecurity.filter.KeycloakPreAuthActionsFilter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -15,6 +18,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
+import org.springframework.core.io.Resource;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -22,6 +26,9 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.web.authentication.session.RegisterSessionAuthenticationStrategy;
 import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * Application security configuration.
@@ -34,6 +41,7 @@ import org.springframework.security.web.authentication.session.SessionAuthentica
 @ComponentScan(basePackageClasses = KeycloakSecurityComponents.class)  //necessary for KeycloakClientRequestFactory to be found
 public class KeycloakSecurityConfig extends KeycloakWebSecurityConfigurerAdapter //this class causes failing due to keycloag.json missing..
 {
+
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         auth.authenticationProvider(keycloakAuthenticationProvider());
@@ -79,5 +87,22 @@ public class KeycloakSecurityConfig extends KeycloakWebSecurityConfigurerAdapter
                 .antMatchers("/admin*").hasRole("ADMIN")
                 .anyRequest().permitAll();
     }
+
+//    @Value("${keycloak.configurationFile:WEB-INF/keycloak.json}")
+//    private Resource mainRealmConfigFileResource;
+//    public   KeycloakDeployment keycloakDeployment;
+//
+//    //unneccessary
+//    private KeycloakDeployment gainAccessToKeycloakDeployment(String realmName, Resource realmConfigFileResource) {
+//        InputStream is = null;
+//        try {
+//            is = realmConfigFileResource.getInputStream();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        KeycloakDeployment deployment = KeycloakDeploymentBuilder.build(is);
+//        this.cache.put(realmName, deployment);
+//        return deployment;
+//    }
 
 }
