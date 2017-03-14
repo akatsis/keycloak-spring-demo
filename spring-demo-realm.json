@@ -1,5 +1,6 @@
 {
   "id" : "00d79b13-32f3-492c-80e4-d79a0141355b",
+"dokimi":"dokimi",
   "realm" : "spring-demo",
   "notBefore" : 0,
   "accessTokenLifespan" : 60,
