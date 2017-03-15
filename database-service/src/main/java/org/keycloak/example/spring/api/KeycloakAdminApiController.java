@@ -35,8 +35,10 @@ public class KeycloakAdminApiController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping
     public ResponseEntity<String> createGame(@RequestBody String gameName) {
-        createRealmFromTemplate("spring-demo",gameName+"_realm");
-        createClientForRealmFromTemplate("spring-demo", "customer-portal", gameName+"_realm", MOBILE_GAME_CLIENT);
+//        createRealmFromTemplate("spring-demo",gameName+"_realm");
+        createRealmFromScratch(gameName+"_realm");
+//        createClientForRealmFromTemplate("spring-demo", "customer-portal", gameName+"_realm", MOBILE_GAME_CLIENT);
+        createClientForRealmFromScratch(gameName+"_realm", MOBILE_GAME_CLIENT);
 //        createRealmUser(gameName+"_realm");
         return new ResponseEntity<>("game realm and client created!", HttpStatus.CREATED);
     }
@@ -53,6 +55,18 @@ public class KeycloakAdminApiController {
         templateRealmRepresentation.setRegistrationAllowed(true);
         templateRealmRepresentation.setDefaultRoles(asList("ROLE_USER"));
         keycloak.realms().create(templateRealmRepresentation);
+    }
+
+    private void createRealmFromScratch(String newRealmName){
+        RealmRepresentation realm = new RealmRepresentation();
+        realm.setId(newRealmName);
+        realm.setRealm(newRealmName);
+        realm.setDisplayName(newRealmName);
+        realm.setEnabled(true);
+        realm.setSslRequired("external");
+        realm.setRegistrationAllowed(true);
+        realm.setDefaultRoles(asList("ROLE_USER"));
+        keycloak.realms().create(realm);
     }
 
 
@@ -176,6 +190,31 @@ public class KeycloakAdminApiController {
             keycloak.realms().realm(targetRealm).roles().create(role);
         }));
 
+    }
+
+    private void createClientForRealmFromScratch(String targetRealm, String newClient){
+        //create client app within realm
+        ClientRepresentation client= new ClientRepresentation();
+        client.setClientId(newClient);
+        client.setName(newClient);
+        client.setPublicClient(false); //confidential
+        client.setEnabled(true);
+        client.setProtocol("openid-connect");
+        client.setClientAuthenticatorType("client-secret");
+        client.setRedirectUris(singletonList("http://localhost:9092/customer-portal/*"));
+        client.setBaseUrl("http://localhost:9092/customer-portal/");
+        client.setWebOrigins(singletonList("http://localhost:9092"));
+        client.setStandardFlowEnabled(true); //disable other flows
+        keycloak.realms().realm(targetRealm).clients().create(client);
+
+
+        //create realm roles
+        RoleRepresentation role = new RoleRepresentation();
+        role.setName("ROLE_ADMIN");
+        role.setDescription("administratoras");
+        role.setClientRole(false);
+        role.setContainerId(targetRealm);
+        keycloak.realms().realm(targetRealm).roles().create(role);
     }
 
 

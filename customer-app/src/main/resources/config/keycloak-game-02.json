@@ -4,7 +4,7 @@
   "ssl-required": "external",
   "resource": "mobile_game_app",
   "credentials": {
-    "secret": "1a5d1828-8e61-41ed-9336-a95060aa6a8b"
+    "secret": "a3b97d8b-52e1-4b71-aaee-71295143953a"
   },
   "principal-attribute": "email"
 }
