@@ -120,12 +120,16 @@ public class KeycloakSecurityConfig extends KeycloakWebSecurityConfigurerAdapter
 //        return deployment;
 //    }
 
+    @Value("${keycloak.server.url}")
+    private String keycloakServerUrl;
+
+
     private KeycloakDeployment loadRealmFromRepresentation(String realmName, RealmRepresentation realmRepresentation){
         AdapterConfig realmConfig = new AdapterConfig();
         realmConfig.setRealm(realmName);
         realmConfig.setRealmKey(realmRepresentation.getPublicKey());
         realmConfig.setPrincipalAttribute("email");
-        realmConfig.setAuthServerUrl("http://localhost:8095/auth");
+        realmConfig.setAuthServerUrl(this.keycloakServerUrl);
         realmConfig.setBearerOnly(true);
         realmConfig.setSslRequired("external");
         realmConfig.setResource(MOBILE_GAME_CLIENT);

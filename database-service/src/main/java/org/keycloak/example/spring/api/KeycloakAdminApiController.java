@@ -1,20 +1,17 @@
 package org.keycloak.example.spring.api;
 
 import org.keycloak.admin.client.Keycloak;
+import org.keycloak.admin.client.resource.ClientResource;
 import org.keycloak.admin.client.resource.RealmsResource;
 import org.keycloak.representations.idm.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.util.Assert;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
@@ -23,7 +20,8 @@ import static java.util.Collections.singletonList;
 /**
  * Created by angelos on 10/3/2017.
  */
-@RestController("/realms")
+@RestController
+@RequestMapping("/multi-tenant/spring-demo/realms")
 public class KeycloakAdminApiController {
     public static final String MOBILE_GAME_CLIENT = "mobile_game_app";
 
@@ -57,6 +55,89 @@ public class KeycloakAdminApiController {
         keycloak.realms().create(templateRealmRepresentation);
     }
 
+
+    //NOTE: to find what attributes and with what values you need to fill in, create all these elements MANUALLY on
+    //the admin console, the used the Java Admin client to fetch these info and investigate attributes returned and their
+    //respecive values
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PostMapping("/{gameRealm}/identityProviders")
+    public ResponseEntity<String> addIdentityProviderToRealm(
+            @PathVariable("gameRealm") String realmName,
+            @RequestBody Map<String, String> config){
+        String providerId = config.get("providerId");
+        String clientId = config.get("clientId");
+        String clientSecret = config.get("clientSecret");
+        Assert.notNull(providerId,"null providerId");
+        Assert.notNull(clientId,"null clientId"); //TODO: this should be provided by author
+        Assert.notNull(clientSecret,"null clientSecred");//TODO: this should be provided by author
+
+        IdentityProviderRepresentation idp = new IdentityProviderRepresentation();
+        idp.setAlias(providerId);
+        idp.setProviderId(providerId);
+        idp.setEnabled(true);
+        idp.setStoreToken(true);
+        idp.setTrustEmail(false);
+        idp.setAddReadTokenRoleOnCreate(true);
+        idp.setFirstBrokerLoginFlowAlias("first broker login");
+        idp.setConfig(new HashMap<String, String>(){{
+            put("clientId", clientId);
+            put("clientSecret", clientSecret);
+            put("useJwksUrl", "true");
+        }});
+
+        keycloak.realms().realm(realmName).identityProviders().create(idp);//create the idp
+
+        addIdPMapperToIdp(realmName, providerId,"facebook_id_idpMapper","id","facebook_id");
+        addIdPMapperToIdp(realmName, providerId,"facebook_firstName_idpMapper","first_name","facebook_firstName");
+        addIdPMapperToIdp(realmName, providerId,"facebook_lastName_idpMapper","last_name","facebook_lastName");
+        addFacebookMappersToMobileGameClient(realmName);
+
+
+        return new ResponseEntity<>(format("identity provider %s created for realm %s",providerId,realmName), HttpStatus.CREATED);
+    }
+
+    private void addIdPMapperToIdp(String realmName, String providerId, String mapperName, String providerProfilePath, String userProfilePath){
+        IdentityProviderMapperRepresentation idpm = new IdentityProviderMapperRepresentation();
+        idpm.setName(mapperName);
+        idpm.setIdentityProviderAlias(providerId);
+        idpm.setIdentityProviderMapper(providerId + "-user-attribute-mapper");
+        idpm.setConfig(new HashMap<String, String>(){{
+            put("jsonField", providerProfilePath);
+            put("userAttribute", userProfilePath);
+        }});
+        keycloak.realms().realm(realmName).identityProviders().get(providerId).addMapper(idpm);
+    }
+
+    private void addFacebookMappersToMobileGameClient(String realmName){
+        String appId =  keycloak.realm(realmName).clients().findByClientId(MOBILE_GAME_CLIENT).get(0).getId();
+        ClientResource app =  keycloak.realm(realmName).clients().get(appId);
+        app.getProtocolMappers().createMapper(getMapperConfig("facebook_id_realmMapper", "facebook_id", "facebook.id"));
+        app.getProtocolMappers().createMapper(getMapperConfig("facebook_firstName_realmMapper","facebook_firstName", "facebook.firstName"));
+        app.getProtocolMappers().createMapper(getMapperConfig("facebook_lastName_realmMapper","facebook_lastName", "facebook.lastName"));
+    }
+
+    private ProtocolMapperRepresentation getMapperConfig(String mapperName, String userAttributeName, String jwtAttributeName){
+        ProtocolMapperRepresentation mapper = new ProtocolMapperRepresentation();
+        mapper.setName(mapperName);
+        mapper.setProtocol("openid-connect");
+        mapper.setProtocolMapper("oidc-usermodel-attribute-mapper");
+        mapper.setConsentRequired(false);
+        mapper.setConfig(new HashMap<String, String>(){{
+            put("userinfo.token.claim" , "true");
+            put("user.attribute" , userAttributeName);
+            put("id.token.claim" , "true");
+            put("access.token.claim" , "true");
+            put("claim.name" , jwtAttributeName);
+            put("jsonType.label" , "String");
+        }});
+        return mapper;
+    }
+
+
+
+
+
+
     private void createClientForRealmFromTemplate(String templateRealm, String templateCLient, String targetRealm, String newClient){
         ClientRepresentation templateClientRepresentation=
                 keycloak.realms().realm(templateRealm).clients().findByClientId(templateCLient).get(0);
@@ -77,6 +158,10 @@ public class KeycloakAdminApiController {
 //        + dokimi js adapter
 //                + fb login
 //                + mapper gia fb token
+
+
+        //TODO: create mappers gia fb KAI ston CLIENT
+        //TODO: mi vasizetai se templates gia client kai realm creation, des ti epistrefei to api kai gemise ta explicitly!!!!!!!
 
 
 

@@ -21,13 +21,13 @@
         </dependency>
         <dependency>
             <groupId>org.jboss.resteasy</groupId>
-            <artifactId>resteasy-client</artifactId>
-            <version>3.1.1.Final</version>
+            <artifactId>jaxrs-api</artifactId>
+            <version>3.0.12.Final</version>
         </dependency>
         <dependency>
             <groupId>org.jboss.resteasy</groupId>
-            <artifactId>jaxrs-api</artifactId>
-            <version>3.0.12.Final</version>
+            <artifactId>resteasy-multipart-provider</artifactId>
+            <version>3.1.1.Final</version>
         </dependency>
         <dependency>
             <groupId>org.jboss.resteasy</groupId>

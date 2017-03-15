@@ -8,6 +8,7 @@ logging:
   level:
     org.springframework.security.web: debug
 
+keycloak.server.url: http://localhost:8095/auth
 #
 #keycloak:
 #  configurationFile: classpath:config/keycloak-main.json

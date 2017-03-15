@@ -9,6 +9,9 @@ import org.springframework.stereotype.Service;
 import javax.validation.constraints.NotNull;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+
+import static java.lang.String.format;
 
 /**
  * Demonstrates making a call to
@@ -45,6 +48,15 @@ public class RemoteCustomerService implements CustomerService {
         String endpoint = this.endpoint+"/multi-tenant/"+DEFAULT_REALM+"/realms";
 
         ResponseEntity<String> response = template.postForEntity(endpoint, gameName ,String.class);
+        return response.getBody();
+    }
+
+    @Override
+    public String addIdentityProviderToRealm(
+            String realmName,
+            Map<String, String> config){
+        String endpoint = this.endpoint+"/multi-tenant/"+DEFAULT_REALM+"/realms/%s/identityProviders";
+        ResponseEntity<String> response = template.postForEntity(format(endpoint,realmName), config ,String.class);
         return response.getBody();
     }
 }

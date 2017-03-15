@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotNull;
 import java.security.Principal;
+import java.util.Map;
 
 /**
  * Customer portal controller.
@@ -53,6 +54,17 @@ public class CustomerController {
     public @ResponseBody String createGame(@RequestBody String gameName) {
         return customerService.createGame(gameName);
     }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PostMapping(value = "/prepost/{realm}/addIdp")
+    public @ResponseBody String createGame(
+            @PathVariable("realm") String realmName,
+            @RequestBody Map<String, String> config) {
+        return customerService.addIdentityProviderToRealm(
+                realmName,
+                config);
+    }
+
 
     @RequestMapping(value = "/admin", method = RequestMethod.GET)
     public String handleAdminRequest(Principal principal, Model model) {

@@ -22,4 +22,4 @@ logging:
     org.springframework.security.web: debug
 
 keycloak:
-  configurationFile: classpath:config/keycloak-game-01.json
+  configurationFile: classpath:config/keycloak-main.json
