@@ -71,8 +71,8 @@ public class KeycloakSecurityConfig extends KeycloakWebSecurityConfigurerAdapter
     }
 
 
-    @Value("${keycloak.configurationFile:WEB-INF/keycloak.json}")
-    private Resource mainRealmConfigFileResource;
+//    @Value("${keycloak.configurationFile:WEB-INF/keycloak.json}")
+//    private Resource mainRealmConfigFileResource;
     private final Map<String, KeycloakDeployment> cache = new ConcurrentHashMap<String, KeycloakDeployment>();
 
     @Bean
@@ -84,11 +84,12 @@ public class KeycloakSecurityConfig extends KeycloakWebSecurityConfigurerAdapter
             String path = facade.getURI();
             int multitenantIndex = path.indexOf("multi-tenant/");
             if (multitenantIndex == -1) {
-                KeycloakDeployment deployment = cache.get(mainRealm);
-                if (null == deployment) {
-                    return loadRealmFromConfigFile(mainRealm, this.mainRealmConfigFileResource);
-                }
-                return deployment;
+                throw new IllegalArgumentException("wrong url");
+//                KeycloakDeployment deployment = cache.get(mainRealm);
+//                if (null == deployment) {
+//                    return loadRealmFromConfigFile(mainRealm, this.mainRealmConfigFileResource);
+//                }
+//                return deployment;
             }
 
             String realm = path.substring(path.indexOf("multi-tenant/")).split("/")[1];
@@ -107,22 +108,23 @@ public class KeycloakSecurityConfig extends KeycloakWebSecurityConfigurerAdapter
         };
     }
 
-    private KeycloakDeployment loadRealmFromConfigFile(String realmName, Resource realmConfigFileResource) {
-        InputStream is = null;
-        try {
-            is = realmConfigFileResource.getInputStream();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        KeycloakDeployment deployment = KeycloakDeploymentBuilder.build(is);
-        this.cache.put(realmName, deployment);
-        return deployment;
-    }
+//    private KeycloakDeployment loadRealmFromConfigFile(String realmName, Resource realmConfigFileResource) {
+//        InputStream is = null;
+//        try {
+//            is = realmConfigFileResource.getInputStream();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        KeycloakDeployment deployment = KeycloakDeploymentBuilder.build(is);
+//        this.cache.put(realmName, deployment);
+//        return deployment;
+//    }
 
     private KeycloakDeployment loadRealmFromRepresentation(String realmName, RealmRepresentation realmRepresentation){
         AdapterConfig realmConfig = new AdapterConfig();
         realmConfig.setRealm(realmName);
         realmConfig.setRealmKey(realmRepresentation.getPublicKey());
+        realmConfig.setPrincipalAttribute("email");
         realmConfig.setAuthServerUrl("http://localhost:8095/auth");
         realmConfig.setBearerOnly(true);
         realmConfig.setSslRequired("external");

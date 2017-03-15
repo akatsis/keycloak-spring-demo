@@ -8,6 +8,6 @@ logging:
   level:
     org.springframework.security.web: debug
 
-
-keycloak:
-  configurationFile: classpath:config/keycloak-main.json
+#
+#keycloak:
+#  configurationFile: classpath:config/keycloak-main.json

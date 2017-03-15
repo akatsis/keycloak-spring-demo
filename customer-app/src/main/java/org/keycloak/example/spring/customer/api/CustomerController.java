@@ -41,7 +41,7 @@ public class CustomerController {
         return "customers";
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_USER')")
     @RequestMapping(value = "/prepost/principal", method = RequestMethod.GET)
     @ResponseBody
     public String getPrincipal(KeycloakAuthenticationToken token) {

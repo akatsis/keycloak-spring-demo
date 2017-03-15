@@ -68,7 +68,19 @@ public class KeycloakAdminApiController {
         templateClientRepresentation.setBaseUrl("http://localhost:9092/customer-portal/");
         templateClientRepresentation.setWebOrigins(singletonList("http://localhost:9092"));
         templateClientRepresentation.setStandardFlowEnabled(true); //disable other flows
-        templateClientRepresentation.setProtocolMappers(null);//TODO, COPY MAPPERS TOO, TO HAVE USER DETAILS IN PRINIPAL!!!!
+
+
+
+        templateClientRepresentation.setProtocolMappers(null);
+
+//        //TODO, COPY MAPPERS TOO, TO HAVE USER DETAILS IN PRINIPAL!!!!
+//        + dokimi js adapter
+//                + fb login
+//                + mapper gia fb token
+
+
+
+
         keycloak.realms().realm(targetRealm).clients().create(templateClientRepresentation);
 
 

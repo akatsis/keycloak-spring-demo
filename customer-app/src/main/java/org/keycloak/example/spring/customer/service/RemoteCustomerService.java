@@ -32,9 +32,9 @@ public class RemoteCustomerService implements CustomerService {
 
     @Override
     public List<String> getCustomers(String realm) {
-        String endpoint= this.endpoint+"/customers";
-        if(!realm.equals(DEFAULT_REALM))
-            endpoint = this.endpoint+"/multi-tenant/"+realm+"/customers";
+//        String endpoint= this.endpoint+"/customers";
+//        if(!realm.equals(DEFAULT_REALM))
+        String endpoint = this.endpoint+"/multi-tenant/"+realm+"/customers";
 
         ResponseEntity<String[]> response = template.getForEntity(endpoint, String[].class);
         return Arrays.asList(response.getBody());
@@ -42,7 +42,9 @@ public class RemoteCustomerService implements CustomerService {
 
     @Override
     public String createGame(String gameName) {
-        ResponseEntity<String> response = template.postForEntity(endpoint+"/realms", gameName ,String.class);
+        String endpoint = this.endpoint+"/multi-tenant/"+DEFAULT_REALM+"/realms";
+
+        ResponseEntity<String> response = template.postForEntity(endpoint, gameName ,String.class);
         return response.getBody();
     }
 }
